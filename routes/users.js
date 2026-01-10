@@ -1,11 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getAllUsers, createUser } = require('../controllers/userController');
+const {
+  getAllUsers,
+  createUser,
+  register,
+  login,
+} = require("../controllers/userController");
+const auth = require("../middleware/authMiddleware");
 
-// GET all users
-router.get('/', getAllUsers);
+// GET all users (protected)
+router.get("/", auth, getAllUsers);
 
-// POST a new user
-router.post('/', createUser);
+// POST a new user (unprotected raw create)
+router.post("/", createUser);
+
+// Register (hashes password)
+router.post("/register", register);
+
+// Login (returns JWT)
+router.post("/login", login);
 
 module.exports = router;
