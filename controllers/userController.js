@@ -37,7 +37,50 @@ const login = async (req, res) => {
   try {
     console.log("Login request body:", req.body);
     const auth = await userService.authenticate(req.body);
-    if (!auth) return res.status(401).json({ message: "Invalid credentials" });
+
+    // If service returned a structured failure, map to field-specific responses
+    if (auth && auth.reason) {
+      if (auth.reason === "not_found")
+        return res
+          .status(404)
+          .json({
+            message: auth.message || "Email not registered",
+            field: "email",
+          });
+      if (auth.reason === "invalid_password")
+        return res
+          .status(401)
+          .json({
+            message: auth.message || "Incorrect password",
+            field: "password",
+          });
+      if (auth.reason === "no_password")
+        return res
+          .status(400)
+          .json({
+            message: auth.message || "No password set for this account",
+            field: "password",
+          });
+      // generic error
+      if (auth.reason === "error")
+        return res
+          .status(500)
+          .json({
+            message: auth.message || "Authentication error",
+            field: "general",
+          });
+      return res
+        .status(401)
+        .json({
+          message: auth.message || "Invalid credentials",
+          field: "general",
+        });
+    }
+
+    if (!auth)
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials", field: "general" });
     res.json(auth);
   } catch (err) {
     console.error("Login error (backend):", err && err.stack ? err.stack : err);

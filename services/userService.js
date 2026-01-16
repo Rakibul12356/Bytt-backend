@@ -19,7 +19,14 @@ const register = async ({ name, email, password }) => {
   const existing = await db.collection("users").findOne({ email });
   if (existing) throw new Error("User already exists");
   const hashed = await bcrypt.hash(password, 10);
-  const user = { name, email, password: hashed, createdAt: new Date() };
+  // ensure role defaults to 'student'
+  const user = {
+    name,
+    email,
+    password: hashed,
+    role: "student",
+    createdAt: new Date(),
+  };
   const result = await db.collection("users").insertOne(user);
   user._id = result.insertedId;
   delete user.password;
@@ -37,13 +44,16 @@ const authenticate = async ({ email, password }) => {
     "hasPassword:",
     !!(user && user.password)
   );
-  if (!user) return null;
+  if (!user) return { reason: "not_found", message: "Email not registered" };
   if (!user.password) {
     console.warn(
       "authenticate: user has no password field, cannot verify password",
       email
     );
-    return null;
+    return {
+      reason: "no_password",
+      message: "No password set for this account",
+    };
   }
   // Log a small prefix and whether it looks like a bcrypt hash for debugging
   try {
@@ -66,11 +76,11 @@ const authenticate = async ({ email, password }) => {
     console.log("bcrypt compare result:", match, "for email:", email);
   } catch (e) {
     console.error("bcrypt compare error for", email, e);
-    return null;
+    return { reason: "error", message: "Authentication error" };
   }
   if (!match) {
     console.log("Password mismatch for:", email);
-    return null;
+    return { reason: "invalid_password", message: "Incorrect password" };
   }
   console.log("Password matched! Generating JWT...");
   // Provide a development fallback for JWT secret to avoid 500s during local testing.
