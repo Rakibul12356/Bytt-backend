@@ -20,14 +20,14 @@ async function importCourses() {
 
     // Display inserted courses
     const allCourses = await coursesCollection.find().toArray();
-    console.log("\n📚 Courses in database:");
+    console.log("\n Courses in database:");
     allCourses.forEach((course, index) => {
       console.log(`${index + 1}. ${course.name} - ${course.price} BDT`);
     });
 
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error importing courses:", error);
+    console.error(" Error importing courses:", error);
     process.exit(1);
   }
 }
