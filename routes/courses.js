@@ -25,3 +25,4 @@ router.put("/:id", auth, updateCourse);
 router.delete("/:id", auth, deleteCourse);
 
 module.exports = router;
+
