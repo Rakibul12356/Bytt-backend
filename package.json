@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node index.js",
+    "dev": "node init && node index.js",
     "fix:roles": "node scripts/addRoles.js",
     "import:courses": "node scripts/importCourses.js",
-    "start": "node index.js"
+    "start": "node init && node index.js"
   },
   "keywords": [],
   "author": "",

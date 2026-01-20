@@ -12,8 +12,8 @@ async function connectDB() {
     db = client.db(process.env.DB_NAME);
     console.log("Connected to MongoDB");
   } catch (err) {
-    console.error(err);
-    process.exit(1);
+    console.error("MongoDB connection error:", err);
+    throw err; // Throw error instead of exiting
   }
 }
 
