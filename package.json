@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node index.js",
     "fix:roles": "node scripts/addRoles.js",
+    "import:courses": "node scripts/importCourses.js",
     "start": "node index.js"
   },
   "keywords": [],
@@ -14,11 +15,11 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "cors": "^2.8.5",
-    "mongodb": "^7.0.0",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^7.0.0"
   }
 }
